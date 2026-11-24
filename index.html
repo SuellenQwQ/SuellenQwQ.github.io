@@ -4,21 +4,49 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Suellen</title>
+<meta name="description" content="Suellen — MtF, NCUK → UNSW, learning Python by hunting bugs in open source.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Suellen">
+<meta property="og:description" content="MtF · NCUK → UNSW · learning Python by hunting bugs in open source — 27 issues, 2 PRs, 1 merged upstream.">
+<meta property="og:url" content="https://suellenqwq.github.io/">
+<meta property="og:image" content="https://avatars.githubusercontent.com/u/278082442?v=4">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Suellen">
+<meta name="twitter:description" content="MtF · NCUK → UNSW · learning Python by hunting bugs in open source.">
+<meta name="twitter:image" content="https://avatars.githubusercontent.com/u/278082442?v=4">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👋</text></svg>">
 <style>
+  :root {
+    --text: #2b2b2b;
+    --card-bg: rgba(255, 255, 255, 0.82);
+    --card-shadow: 0 20px 60px rgba(91, 206, 250, 0.35);
+    --muted: rgba(43, 43, 43, .75);
+    --footer: rgba(43, 43, 43, .55);
+  }
+  body.dark {
+    --text: #ececf2;
+    --card-bg: rgba(28, 28, 40, 0.86);
+    --card-shadow: 0 20px 60px rgba(20, 24, 44, 0.6);
+    --muted: rgba(236, 236, 242, .72);
+    --footer: rgba(236, 236, 242, .5);
+  }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
     min-height: 100vh;
     font-family: "Segoe UI", system-ui, sans-serif;
     background: linear-gradient(135deg, #5BCEFA 0%, #F5A9B8 50%, #ffffff 100%);
     display: flex; align-items: center; justify-content: center;
-    color: #2b2b2b;
+    color: var(--text);
+  }
+  body.dark {
+    background: linear-gradient(135deg, #12263a 0%, #2e1f31 50%, #101018 100%);
   }
   .card {
-    background: rgba(255, 255, 255, 0.82);
+    background: var(--card-bg);
     backdrop-filter: blur(10px);
     border-radius: 24px;
     padding: 56px 64px;
-    box-shadow: 0 20px 60px rgba(91, 206, 250, 0.35);
+    box-shadow: var(--card-shadow);
     text-align: center;
     max-width: 560px;
     margin: 24px;
@@ -31,7 +59,7 @@
     box-shadow: 0 8px 24px rgba(245, 169, 184, 0.5);
   }
   h1 { font-size: 34px; margin-bottom: 8px; }
-  .sub { font-size: 16px; opacity: .75; margin-bottom: 26px; line-height: 1.7; }
+  .sub { font-size: 16px; opacity: .85; margin-bottom: 26px; line-height: 1.7; }
   .flag { font-size: 20px; }
   .links { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 8px; }
   a.btn {
@@ -42,10 +70,25 @@
     box-shadow: 0 4px 14px rgba(91, 206, 250, .4);
   }
   a.btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(245, 169, 184, .5); }
-  footer { margin-top: 30px; font-size: 13px; opacity: .55; }
+  footer { margin-top: 30px; font-size: 13px; opacity: .6; }
+  .theme-toggle {
+    position: fixed; top: 16px; right: 16px;
+    width: 44px; height: 44px; border-radius: 50%;
+    border: none; cursor: pointer; font-size: 20px;
+    background: var(--card-bg);
+    color: var(--text);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, .18);
+    transition: transform .15s ease;
+  }
+  .theme-toggle:hover { transform: rotate(15deg) scale(1.05); }
+  @media (max-width: 480px) {
+    .card { padding: 40px 28px; }
+    h1 { font-size: 28px; }
+  }
 </style>
 </head>
 <body>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" title="Toggle dark mode">🌓</button>
   <main class="card">
     <div class="avatar">&#128075;</div>
     <h1>Hi, I'm Suellen</h1>
@@ -53,13 +96,33 @@
       <span class="flag">&#127987;&#65039;&#8205;&#9895;&#65039;</span>
       MtF &middot; she/her<br>
       NCUK Foundation &rarr; <b>UNSW</b>, Australia<br>
-      learning Python by hunting bugs in open source<br><b>first PR merged upstream</b> &middot; 22 bugs found so far
+      learning Python by hunting bugs in open source<br><b>first PR merged upstream</b> &middot; 27 issues &amp; 2 PRs across open source
     </p>
     <div class="links">
       <a class="btn" href="https://github.com/SuellenQwQ">GitHub</a>
       <a class="btn" href="https://github.com/SuellenQwQ/bug-hunting-kit">bug-hunting-kit</a>
+      <a class="btn" href="https://github.com/SuellenQwQ/galgame-picker">galgame-picker</a>
     </div>
     <footer>made with &lt;3 and three colors</footer>
   </main>
+  <script>
+    (function () {
+      var root = document.body;
+      var btn = document.getElementById("themeToggle");
+      var stored = null;
+      try { stored = localStorage.getItem("theme"); } catch (e) {}
+      function apply(dark) {
+        root.classList.toggle("dark", dark);
+        try { localStorage.setItem("theme", dark ? "dark" : "light"); } catch (e) {}
+      }
+      var dark = stored
+        ? stored === "dark"
+        : window.matchMedia("(prefers-color-scheme: dark)").matches;
+      root.classList.toggle("dark", dark);
+      btn.addEventListener("click", function () {
+        apply(!root.classList.contains("dark"));
+      });
+    })();
+  </script>
 </body>
 </html>
